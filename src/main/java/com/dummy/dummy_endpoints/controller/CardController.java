@@ -13,10 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/cards")
+@RequestMapping("/api/cards")
 @RequiredArgsConstructor
 public class CardController {
 
@@ -47,8 +49,12 @@ public class CardController {
     @GetMapping("/active-between")
     @Operation(summary = "Get all active cards between two dates")
     public ResponseEntity<List<CardDto>> getActiveCardsBetweenDates(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String startDateStr,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String endDateStr) {
+
+        Instant startDate = LocalDate.parse(startDateStr).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant endDate = LocalDate.parse(endDateStr).atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant();
+
         return ResponseEntity.ok(cardService.getActiveCardsBetweenDates(startDate, endDate));
     }
 
