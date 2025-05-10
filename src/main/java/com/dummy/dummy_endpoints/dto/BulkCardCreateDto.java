@@ -5,13 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewCreateDto {
-    private String reviewContent;
-    private Double rating;
-    private String reviewerName;
-    private String reviewerCategory;
+public class BulkCardCreateDto {
+    private List<CardCreateDto> cards;
 }

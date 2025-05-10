@@ -13,7 +13,7 @@ import lombok.*;
 @Table(name = "review")
 public class Review extends BaseModel {
     private String reviewContent;
-    private int rating;
+    private Double rating;
     private String reviewerName;
     private String reviewerCategory;
 }

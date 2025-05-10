@@ -4,6 +4,7 @@ import com.dummy.dummy_endpoints.dto.FAQCreateDto;
 import com.dummy.dummy_endpoints.dto.FAQDto;
 import com.dummy.dummy_endpoints.dto.FAQUpdateDto;
 import com.dummy.dummy_endpoints.service.FAQService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ public class FAQController {
     private final FAQService faqService;
 
     @GetMapping
+    @Operation(summary = "Get all FAQs")
     public ResponseEntity<List<FAQDto>> getAllFAQs() {
         return ResponseEntity.ok(faqService.getAllFAQs());
     }

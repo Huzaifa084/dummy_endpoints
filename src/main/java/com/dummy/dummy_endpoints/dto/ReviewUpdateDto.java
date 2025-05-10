@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReviewUpdateDto {
     private String reviewContent;
-    private int rating;
+    private Double rating;
     private String reviewerName;
     private String reviewerCategory;
 }

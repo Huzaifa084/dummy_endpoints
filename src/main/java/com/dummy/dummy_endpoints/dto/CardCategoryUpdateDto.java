@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewCreateDto {
-    private String reviewContent;
-    private Double rating;
-    private String reviewerName;
-    private String reviewerCategory;
+public class CardCategoryUpdateDto {
+    private String name;
+    private String description;
+    private Boolean isActive;
 }

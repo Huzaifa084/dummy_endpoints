@@ -5,13 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewCreateDto {
-    private String reviewContent;
-    private Double rating;
-    private String reviewerName;
-    private String reviewerCategory;
+public class ApiResponse<T> {
+    private boolean success;
+    private String message;
+    private T data;
+    private Map<String, String> errors;
 }
+
