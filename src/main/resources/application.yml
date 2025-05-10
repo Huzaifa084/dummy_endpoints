@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: dummy_endpoints
+
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3307}/dummy_db
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:test1234}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: false
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 30m
+
+jwt:
+  secret: "IHguM5L7OMP&1KoH0z_VKPk%DBjvGydKmyoOdNWLlr!YVjj1CYGgv6V*+)8OLXVP+@vlgMN5zBt8CmsoNu*gtnjLw=="
+  encryption-secret: "JHguM5L7Ab%689TbL!0/=0nibTY%8oH0z_VKPk%DBjvGydKmysOdNWLlr!YVjj1CYGKv6V*+)hiHHI^0jb(8msoNu*gtnjLw=="
+  expiry: 86400000
+  password-reset-expiry: 1800000
