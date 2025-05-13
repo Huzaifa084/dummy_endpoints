@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/faqs")
@@ -56,8 +58,10 @@ public class FAQController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an FAQ")
-    public ResponseEntity<String> deleteFAQ(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> deleteFAQ(@PathVariable Long id) {
         faqService.deleteFAQ(id);
-        return ResponseEntity.ok().body("FAQ deleted successfully");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "FAQ deleted successfully");
+        return ResponseEntity.ok(response);
     }
 }
