@@ -56,8 +56,8 @@ public class FAQController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an FAQ")
-    public ResponseEntity<Void> deleteFAQ(@PathVariable Long id) {
+    public ResponseEntity<String> deleteFAQ(@PathVariable Long id) {
         faqService.deleteFAQ(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body("FAQ deleted successfully");
     }
 }
