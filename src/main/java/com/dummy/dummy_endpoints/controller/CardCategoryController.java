@@ -18,7 +18,6 @@ import java.util.List;
 @RequestMapping("/api/card-categories")
 @RequiredArgsConstructor
 public class CardCategoryController {
-
     private final CardCategoryService cardCategoryService;
 
     @GetMapping

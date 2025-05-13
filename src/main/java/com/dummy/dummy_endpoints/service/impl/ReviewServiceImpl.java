@@ -9,6 +9,9 @@ import com.dummy.dummy_endpoints.model.Review;
 import com.dummy.dummy_endpoints.repository.ReviewRepository;
 import com.dummy.dummy_endpoints.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,9 +57,26 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void deleteReview(Long id) {
-        if (!reviewRepository.existsById(id)) {
+        if (!reviewRepository.existsById(id))
             throw new ResourceNotFoundException("Review not found with id: " + id);
-        }
         reviewRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ReviewDto> createReviewsBatch(List<ReviewCreateDto> reviewCreateDtos) {
+        List<Review> reviews = reviewCreateDtos.stream()
+                .map(reviewMapper::toEntity)
+                .collect(Collectors.toList());
+        List<Review> savedReviews = reviewRepository.saveAll(reviews);
+        return savedReviews.stream()
+                .map(reviewMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<ReviewDto> getPaginatedReviews(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Review> reviewPage = reviewRepository.findAll(pageable);
+        return reviewPage.map(reviewMapper::toDto);
     }
 }

@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/api/plans")
 @RequiredArgsConstructor
 public class HostingPlanController {
-
     private final HostingPlanService hostingPlanService;
 
     @GetMapping

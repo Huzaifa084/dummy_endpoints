@@ -4,7 +4,9 @@ import com.dummy.dummy_endpoints.dto.ReviewCreateDto;
 import com.dummy.dummy_endpoints.dto.ReviewDto;
 import com.dummy.dummy_endpoints.dto.ReviewUpdateDto;
 import com.dummy.dummy_endpoints.service.ReviewService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/reviews")
 @RequiredArgsConstructor
 public class ReviewController {
-
     private final ReviewService reviewService;
 
     @GetMapping
@@ -44,5 +45,21 @@ public class ReviewController {
     public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
         reviewService.deleteReview(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/batch")
+    @Operation(summary = "Create multiple reviews in batch")
+    public ResponseEntity<List<ReviewDto>> createReviewsBatch(@RequestBody List<ReviewCreateDto> reviewCreateDtos) {
+        List<ReviewDto> createdReviews = reviewService.createReviewsBatch(reviewCreateDtos);
+        return new ResponseEntity<>(createdReviews, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/paginated")
+    @Operation(summary = "Get paginated reviews")
+    public ResponseEntity<Page<ReviewDto>> getPaginatedReviews(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        Page<ReviewDto> paginatedReviews = reviewService.getPaginatedReviews(page, size);
+        return ResponseEntity.ok(paginatedReviews);
     }
 }
