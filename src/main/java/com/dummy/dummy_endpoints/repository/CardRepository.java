@@ -28,11 +28,11 @@ public interface CardRepository extends JpaRepository<Card, Long>, JpaSpecificat
     Page<Card> findByDescriptionContainingIgnoreCase(String descriptionKeyword, Pageable pageable);
 
     @Query("SELECT c FROM Card c WHERE " +
-           "(:title IS NULL OR LOWER(c.title) LIKE LOWER(CONCAT('%', :title, '%'))) AND " +
-           "(:description IS NULL OR LOWER(c.description) LIKE LOWER(CONCAT('%', :description, '%'))) AND " +
-           "(:isActive IS NULL OR c.isActive = :isActive) AND " +
-           "(:priority IS NULL OR c.priority = :priority) AND " +
-           "(:categoryId IS NULL OR c.category.id = :categoryId)")
+            "(:title IS NULL OR LOWER(c.title) LIKE LOWER(CONCAT('%', :title, '%'))) AND " +
+            "(:description IS NULL OR LOWER(c.description) LIKE LOWER(CONCAT('%', :description, '%'))) AND " +
+            "(:isActive IS NULL OR c.isActive = :isActive) AND " +
+            "(:priority IS NULL OR c.priority = :priority) AND " +
+            "(:categoryId IS NULL OR c.category.id = :categoryId)")
     Page<Card> findWithFilters(
             @Param("title") String title,
             @Param("description") String description,
@@ -42,8 +42,8 @@ public interface CardRepository extends JpaRepository<Card, Long>, JpaSpecificat
             Pageable pageable);
 
     @Query("SELECT c FROM Card c WHERE " +
-           "c.createdAt BETWEEN :startDate AND :endDate AND " +
-           "c.isActive = true")
+            "c.createdAt BETWEEN :startDate AND :endDate AND " +
+            "c.isActive = true")
     List<Card> findActiveCardsBetweenDates(
             @Param("startDate") Instant startDate,
             @Param("endDate") Instant endDate);

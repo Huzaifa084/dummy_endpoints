@@ -6,6 +6,7 @@ import com.dummy.dummy_endpoints.dto.FAQUpdateDto;
 import com.dummy.dummy_endpoints.service.FAQService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,19 @@ import java.util.List;
 @RequestMapping("/api/faqs")
 @RequiredArgsConstructor
 public class FAQController {
-
     private final FAQService faqService;
+
+    @GetMapping("/paginated")
+    @Operation(summary = "Get paginated FAQs")
+    public ResponseEntity<Page<FAQDto>> getPaginatedFAQs(@RequestParam int page, @RequestParam int size) {
+        return ResponseEntity.ok(faqService.getPaginatedFAQs(page, size));
+    }
+
+    @PostMapping("/batch")
+    @Operation(summary = "Add multiple FAQs in batch")
+    public ResponseEntity<List<FAQDto>> createFAQsBatch(@RequestBody List<FAQCreateDto> faqCreateDtos) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(faqService.createFAQsBatch(faqCreateDtos));
+    }
 
     @GetMapping
     @Operation(summary = "Get all FAQs")
@@ -43,6 +55,7 @@ public class FAQController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete an FAQ")
     public ResponseEntity<Void> deleteFAQ(@PathVariable Long id) {
         faqService.deleteFAQ(id);
         return ResponseEntity.noContent().build();

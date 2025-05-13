@@ -9,6 +9,8 @@ import com.dummy.dummy_endpoints.model.FAQ;
 import com.dummy.dummy_endpoints.repository.FAQRepository;
 import com.dummy.dummy_endpoints.service.FAQService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,9 +56,26 @@ public class FAQServiceImpl implements FAQService {
 
     @Override
     public void deleteFAQ(Long id) {
-        if (!faqRepository.existsById(id)) {
+        if (!faqRepository.existsById(id))
             throw new ResourceNotFoundException("FAQ not found with id: " + id);
-        }
         faqRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<FAQDto> getPaginatedFAQs(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<FAQ> faqPage = faqRepository.findAll(pageRequest);
+        return faqPage.map(faqMapper::toDto);
+    }
+
+    @Override
+    public List<FAQDto> createFAQsBatch(List<FAQCreateDto> faqCreateDtos) {
+        List<FAQ> faqs = faqCreateDtos.stream()
+                .map(faqMapper::toEntity)
+                .collect(Collectors.toList());
+        List<FAQ> savedFaqs = faqRepository.saveAll(faqs);
+        return savedFaqs.stream()
+                .map(faqMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
