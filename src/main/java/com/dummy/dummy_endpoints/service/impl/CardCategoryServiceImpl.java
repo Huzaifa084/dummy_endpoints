@@ -1,9 +1,6 @@
 package com.dummy.dummy_endpoints.service.impl;
 
-import com.dummy.dummy_endpoints.dto.CardCategoryCreateDto;
-import com.dummy.dummy_endpoints.dto.CardCategoryDto;
-import com.dummy.dummy_endpoints.dto.CardCategoryUpdateDto;
-import com.dummy.dummy_endpoints.dto.PagedResponse;
+import com.dummy.dummy_endpoints.dto.*;
 import com.dummy.dummy_endpoints.exception.ResourceNotFoundException;
 import com.dummy.dummy_endpoints.mapper.CardCategoryMapper;
 import com.dummy.dummy_endpoints.model.CardCategory;
@@ -125,6 +122,10 @@ public class CardCategoryServiceImpl implements CardCategoryService {
             return PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "name"));
         }
 
+        return getPageable(page, size, sort);
+    }
+
+    static Pageable getPageable(int page, int size, String[] sort) {
         List<Sort.Order> orders = new ArrayList<>();
         for (String s : sort) {
             String[] parts = s.split(":");
@@ -136,5 +137,18 @@ public class CardCategoryServiceImpl implements CardCategoryService {
         }
 
         return PageRequest.of(page, size, Sort.by(orders));
+    }
+
+    @Override
+    @Transactional
+    public List<CardCategoryDto> createCardCategories(BulkCardCategoryCreateDto bulkCardCategoryCreateDto) {
+        List<CardCategory> categoriesToSave = bulkCardCategoryCreateDto.getCategories().stream()
+                .map(categoryMapper::toEntity)
+                .collect(Collectors.toList());
+
+        List<CardCategory> savedCategories = categoryRepository.saveAll(categoriesToSave);
+        return savedCategories.stream()
+                .map(categoryMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

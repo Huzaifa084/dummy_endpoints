@@ -1,9 +1,6 @@
 package com.dummy.dummy_endpoints.controller;
 
-import com.dummy.dummy_endpoints.dto.CardCategoryCreateDto;
-import com.dummy.dummy_endpoints.dto.CardCategoryDto;
-import com.dummy.dummy_endpoints.dto.CardCategoryUpdateDto;
-import com.dummy.dummy_endpoints.dto.PagedResponse;
+import com.dummy.dummy_endpoints.dto.*;
 import com.dummy.dummy_endpoints.service.CardCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -12,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/card-categories")
@@ -64,9 +63,11 @@ public class CardCategoryController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a card category")
-    public ResponseEntity<Void> deleteCardCategory(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> deleteCardCategory(@PathVariable Long id) {
         cardCategoryService.deleteCardCategory(id);
-        return ResponseEntity.noContent().build();
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Card category deleted successfully");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/search")
@@ -79,5 +80,13 @@ public class CardCategoryController {
             @RequestParam(defaultValue = "10") int size) {
 
         return ResponseEntity.ok(cardCategoryService.searchCardCategories(name, description, isActive, page, size));
+    }
+
+    @PostMapping("/bulk")
+    @Operation(summary = "Create multiple card categories at once")
+    public ResponseEntity<List<CardCategoryDto>> createCardCategories(
+            @Valid @RequestBody BulkCardCategoryCreateDto bulkCardCategoryCreateDto) {
+        return new ResponseEntity<>(cardCategoryService.createCardCategories(bulkCardCategoryCreateDto),
+                HttpStatus.CREATED);
     }
 }

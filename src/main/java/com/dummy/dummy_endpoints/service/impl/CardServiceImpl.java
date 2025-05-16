@@ -12,6 +12,7 @@ import com.dummy.dummy_endpoints.specifications.CardSpecifications;
 import com.dummy.dummy_endpoints.util.PagedResponseUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.dummy.dummy_endpoints.service.impl.CardCategoryServiceImpl.getPageable;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
-
     private final CardRepository cardRepository;
     private final CardCategoryRepository categoryRepository;
     private final CardMapper cardMapper;
@@ -96,6 +98,7 @@ public class CardServiceImpl implements CardService {
             }
 
             Card card = cardMapper.toEntity(dto, category);
+//            card.setCreatedAt(Instant.now().minusSeconds(86400));
             cardsToSave.add(card);
         }
 
@@ -135,6 +138,8 @@ public class CardServiceImpl implements CardService {
     public void deleteCards(List<Long> ids) {
         List<Card> cardsToDelete = cardRepository.findAllById(ids);
         if (cardsToDelete.size() != ids.size()) {
+            log.info("Attempted to delete cards, but some IDs were not found. Requested: {}, Found: {}",
+                    ids, cardsToDelete.stream().map(Card::getId).toList());
             throw new ResourceNotFoundException("One or more cards not found");
         }
         cardRepository.deleteAllById(ids);
@@ -159,16 +164,6 @@ public class CardServiceImpl implements CardService {
             return PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         }
 
-        List<Sort.Order> orders = new ArrayList<>();
-        for (String s : sort) {
-            String[] parts = s.split(":");
-            String field = parts[0];
-            Sort.Direction direction = parts.length > 1 ?
-                    ("desc".equalsIgnoreCase(parts[1]) ? Sort.Direction.DESC : Sort.Direction.ASC) :
-                    Sort.Direction.ASC;
-            orders.add(new Sort.Order(direction, field));
-        }
-
-        return PageRequest.of(page, size, Sort.by(orders));
+        return getPageable(page, size, sort);
     }
 }

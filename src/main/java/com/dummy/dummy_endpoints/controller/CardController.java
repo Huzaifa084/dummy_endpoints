@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -79,16 +81,20 @@ public class CardController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a card by ID")
-    public ResponseEntity<Void> deleteCard(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> deleteCard(@PathVariable Long id) {
         cardService.deleteCard(id);
-        return ResponseEntity.noContent().build();
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Card deleted successfully");
+        return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/bulk")
     @Operation(summary = "Delete multiple cards by IDs")
-    public ResponseEntity<Void> deleteCards(@RequestBody List<Long> ids) {
-        cardService.deleteCards(ids);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Map<String, String>> deleteCards(@RequestBody DeleteCardsDro ids) {
+        cardService.deleteCards(ids.getIds());
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Cards deleted successfully");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/search")

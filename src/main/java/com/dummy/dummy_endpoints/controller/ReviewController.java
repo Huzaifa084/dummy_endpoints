@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -42,9 +44,12 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
+    @Operation(summary = "Delete a review")
+    public ResponseEntity<Map<String, String>> deleteReview(@PathVariable Long id) {
         reviewService.deleteReview(id);
-        return ResponseEntity.noContent().build();
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Review deleted successfully");
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/batch")

@@ -1,9 +1,6 @@
 package com.dummy.dummy_endpoints.service;
 
-import com.dummy.dummy_endpoints.dto.CardCategoryCreateDto;
-import com.dummy.dummy_endpoints.dto.CardCategoryDto;
-import com.dummy.dummy_endpoints.dto.CardCategoryUpdateDto;
-import com.dummy.dummy_endpoints.dto.PagedResponse;
+import com.dummy.dummy_endpoints.dto.*;
 
 import java.util.List;
 
@@ -23,4 +20,6 @@ public interface CardCategoryService {
     void deleteCardCategory(Long id);
 
     PagedResponse<CardCategoryDto> searchCardCategories(String name, String description, Boolean isActive, int page, int size);
+
+    List<CardCategoryDto> createCardCategories(BulkCardCategoryCreateDto bulkCardCategoryCreateDto);
 }

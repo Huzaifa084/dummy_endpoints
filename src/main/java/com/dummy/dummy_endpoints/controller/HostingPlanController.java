@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/plans")
@@ -40,8 +41,10 @@ public class HostingPlanController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteHostingPlan(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> deleteHostingPlan(@PathVariable Long id) {
         hostingPlanService.deleteHostingPlan(id);
-        return ResponseEntity.noContent().build();
+        Map<String, String> response = new java.util.HashMap<>();
+        response.put("message", "Hosting plan deleted successfully");
+        return ResponseEntity.ok(response);
     }
 }
